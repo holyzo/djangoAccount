@@ -21,27 +21,26 @@ class EmailPhoneUsernameAuthenticationBackend(object):
         emailPatt = '^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$'
         usernamePatt = '^[A-Za-z][\w]+'
 
-        pdb.set_trace()
         if re.search(phonePatt, username):
             try:
                 user = User.objects.get(phone=username)
 
-        except User.DoesNotExist:
-        return None
+            except User.DoesNotExist:
+                return None
 
         elif re.search(emailPatt, username):
-        try:
-            user = User.objects.get(email=username)
+            try:
+                user = User.objects.get(email=username)
 
-        except User.DoesNotExist:
-            return None
+            except User.DoesNotExist:
+                return None
 
         elif re.search(usernamePatt, username):
-        try:
-            user = User.objects.get(username=username)
+            try:
+                user = User.objects.get(username=username)
 
-        except User.DoesNotExist:
-            return None
+            except User.DoesNotExist:
+                return None
 
         else:  # 맞는 형식이 없을때
             return None
@@ -52,9 +51,9 @@ class EmailPhoneUsernameAuthenticationBackend(object):
         return None
 
 
-def get_user(self, user_id):
-    try:
-        return User.objects.get(pk=user_id)
+    def get_user(self, user_id):
+        try:
+            return User.objects.get(pk=user_id)
 
-    except User.DoesNotExist:
-        return None
+        except User.DoesNotExist:
+            return None
