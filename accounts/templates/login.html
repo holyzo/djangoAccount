@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block body %}
+<h1>로그인</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <table style="width:500px;">
+        <tr>
+            <td>
+                {% bootstrap_form form %}
+                <input type="submit" class="btn btn-primary" value="로그인"/>
+            </td>
+        </tr>
+    </table>
+</form>
+{% endblock %}
