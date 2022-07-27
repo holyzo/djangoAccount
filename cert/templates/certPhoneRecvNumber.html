@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block body %}
+<div class="wrapper" style="text-align: left;">
+    <h1>Certificate phone number</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <table style="width:500px;align:center;">
+            <tr>
+                <td>
+                    <div class="mb-3">
+                        <label for="certNum">Phone number</label>
+                        <input type="text" class="form-control" name="certNum" id="certNum"
+                               value="{{ form.certNum.value|default_if_none:'' }}">
+                    </div>
+                </td>
+            </tr>
+            <tr><td>
+                <input type="submit" class="btn btn-primary" name="submit" value="certificate"/>
+            </td></tr>
+        </table>
+    </form>
+</div>
+{% endblock %}

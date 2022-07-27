@@ -13,7 +13,7 @@ class User(AbstractUser):
     username    = models.CharField(max_length=32, validators=[username_validator], unique=True)
     name        = models.CharField(max_length=128)
     email       = models.EmailField(validators=[EmailValidator], unique=True)
-    phone       = models.CharField(max_length=18, validators=[phone_validator], unique=True)
+    phone       = models.CharField(min_length=10, max_length=11, validators=[phone_validator], unique=True)
     nickname    = models.CharField(max_length=32)
 
     REQUIRED_FIELDS = ["name", "email", "phone", "nickname"]

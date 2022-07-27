@@ -18,7 +18,7 @@ def signup(request):
     elif request.method == "GET":
         form = CreateUserForm()
 
-    return render(request, 'signup.html', {'form': form})
+    return render(request, 'certPhone.html', {'form': form})
 
 
 def login(request):
