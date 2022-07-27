@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block body %}
+<div class="wrapper" style="text-align: left;">
+    <h1>회원가입</h1>
+    <form method="POST">
+        <table style="width:500px;align:center;">
+            <tr>
+                <td>
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    <input type="submit" class="btn btn-primary" name="submit" value="Register"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{% endblock %}
