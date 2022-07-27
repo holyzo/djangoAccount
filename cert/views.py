@@ -15,12 +15,12 @@ def certPhone(request):
                                                phone=form.phone.value,
                                                name=form.name.value)
 
-            return render(request, 'certPhoneRecvNumber.html', {'form': nextForm})
+            return render(request, 'cert/certPhoneRecvNumber.html', {'form': nextForm})
 
     elif request.method == "GET":
         form = CertPhoneInputForm()
 
-    return render(request, 'certPhone.html', {'form': form})
+    return render(request, 'cert/certPhone.html', {'form': form})
 
 
 # 전화번호 인증 - 인증번호 받기
@@ -35,4 +35,4 @@ def certPhoneRecvNumber(request):
             else:
                 return redirect('cert:certPhone')
 
-    return render(request, 'certPhone.html', {'form': form})
+    return render(request, 'cert/certPhoneRecvNumber.html', {'form': form})
