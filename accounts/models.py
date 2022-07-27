@@ -11,8 +11,9 @@ username_validator = RegexValidator(common.PATT_USERNAME,
 
 class User(AbstractUser):
     username    = models.CharField(max_length=32, validators=[username_validator], unique=True)
+    name        = models.CharField(max_length=128)
     email       = models.EmailField(validators=[EmailValidator], unique=True)
     phone       = models.CharField(max_length=18, validators=[phone_validator], unique=True)
     nickname    = models.CharField(max_length=32)
 
-    REQUIRED_FIELDS = ["email", "phone", "nickname"]
+    REQUIRED_FIELDS = ["name", "email", "phone", "nickname"]

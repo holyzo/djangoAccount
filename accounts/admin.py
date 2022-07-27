@@ -7,6 +7,6 @@ class MyUserAdmin(UserAdmin):
 
     for field in UserAdmin.fieldsets:
         if field[0] == 'Personal info':
-            field[1]['fields'] += ('nickname','phone')
+            field[1]['fields'] += ('name','nickname','phone')
 
 admin.site.register(User, MyUserAdmin)
