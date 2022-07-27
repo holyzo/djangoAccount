@@ -1,13 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, EmailValidator
+from django.utils.translation import gettext as _
+from ably import common
 
-phone_validator = RegexValidator(r"^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$",
-                                 "The phone number provided is invalid")
+phone_validator = RegexValidator(common.PATT_PHONE,
+                                 "The phone number must be provided only number letter")
+username_validator = RegexValidator(common.PATT_USERNAME,
+                                    "The username must be provided alphabet and number letter")
 
 class User(AbstractUser):
-    email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=18, validators=[phone_validator], unique=True)
-    nickname = models.CharField(max_length=16, unique=True)
+    username    = models.CharField(max_length=32, validators=[username_validator], unique=True)
+    email       = models.EmailField(validators=[EmailValidator], unique=True)
+    phone       = models.CharField(max_length=18, validators=[phone_validator], unique=True)
+    nickname    = models.CharField(max_length=32)
 
-    REQUIRED_FIELDS = ["phone", "email", "nickname"]
+    REQUIRED_FIELDS = ["email", "phone", "nickname"]

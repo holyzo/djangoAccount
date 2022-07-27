@@ -1,6 +1,6 @@
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import get_user_model
-from django.db.models import Q
+from ably import common
 import pdb
 import re
 
@@ -17,25 +17,22 @@ class EmailPhoneUsernameAuthenticationBackend(object):
     '''
 
     def authenticate(self, request, username=None, password=None):
-        phonePatt = '^\d{10,11}$'
-        emailPatt = '^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$'
-        usernamePatt = '^[A-Za-z][\w]+'
 
-        if re.search(phonePatt, username):
+        if re.search(common.PATT_PHONE, username):
             try:
                 user = User.objects.get(phone=username)
 
             except User.DoesNotExist:
                 return None
 
-        elif re.search(emailPatt, username):
+        elif re.search(common.PATT_EMAIL, username):
             try:
                 user = User.objects.get(email=username)
 
             except User.DoesNotExist:
                 return None
 
-        elif re.search(usernamePatt, username):
+        elif re.search(common.PATT_USERNAME, username):
             try:
                 user = User.objects.get(username=username)
 
