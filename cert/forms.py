@@ -17,6 +17,7 @@ class CertPhoneInputForm(forms.Form):
     gender                      = models.CharField(max_length=1)
     phone                       = models.CharField(max_length=11,
                                                    validators=[phone_validator,])
+    certType = 0
 
 class CertPhoneRecvNumberForm(forms.Form):
     certType = 0

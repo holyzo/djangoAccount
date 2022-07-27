@@ -30,7 +30,7 @@
                     <div class="col-sm-13"><input placeholder="1" type="text" class="form-control" name="gender" id="gender"
                                                  value="{{ form.gender.value|default_if_none:'' }}"></div>
                 </td>
-                <td style="width:130px">
+                <td style="width:140px">
                     ••••••
                 </td>
             </tr>
@@ -42,9 +42,10 @@
                 </td>
             </tr>
             <tr><td colspan="4">
-                <input type="submit" class="btn btn-primary" name="submit" value="submit"/>
+
             </td></tr>
         </table>
+        <input type="submit" class="btn btn-primary" name="submit" value="submit"/>
     </form>
 </div>
 {% endblock %}

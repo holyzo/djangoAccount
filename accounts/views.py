@@ -4,11 +4,14 @@ from .forms import CreateUserForm
 from django.contrib.auth import login as user_login
 from django.contrib.auth import logout as user_logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.urls import reverse_lazy
+import pdb
 
-
+'''
 # 회원가입
 def signup(request):
     if request.method == "POST":
+        pdb.set_trace()
         form = CreateUserForm(request.POST)
         if form.is_valid():
             form.save()
@@ -19,7 +22,10 @@ def signup(request):
         form = CreateUserForm()
 
     return render(request, 'cert/certPhone.html', {'form': form})
-
+'''
+# 회원가입
+def signup(request):
+    return redirect('cert:certPhone') # 전번인증로 넘겨준다.
 
 def login(request):
 
