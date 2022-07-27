@@ -5,5 +5,5 @@ from .views import *
 app_name = 'cert'
 
 urlpatterns = [
-    path('certPhone/', certPhone, name='certPhone'),
+    #path('certPhone/', certPhone, name='certPhone'),
 ]

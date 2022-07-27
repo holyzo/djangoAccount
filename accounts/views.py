@@ -18,7 +18,7 @@ def signup(request):
     elif request.method == "GET":
         form = CreateUserForm()
 
-    return render(request, 'accounts/certPhone.html', {'form': form})
+    return render(request, 'cert/certPhone.html', {'form': form})
 
 
 def login(request):
@@ -28,7 +28,7 @@ def login(request):
         # 회원가입과 다르게 맨 앞의 인자로 request가 들어간다.
         if form.is_valid():
             user_login(request, form.get_user())
-            return redirect('home:index')
+            return redirect('/')
 
         return redirect('accounts:login')
 
