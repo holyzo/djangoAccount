@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect
 from .forms import CertPhoneInputForm, CertPhoneRecvNumberForm, ChangePasswordForm
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import login as user_login
 from django.template import Template
 from django.contrib.auth.forms import AuthenticationForm
@@ -80,14 +81,15 @@ def certPhoneRecvNumber(request):
                 phone = request.session['CERT_DATA']['PHONE']
 
                 # 비밀번호 재설정시 유저가 있는지 체크
-                user = User.objects.filter(phone=phone)
+                userModel = get_user_model()
+                user = userModel.objects.filter(phone=phone)
                 if not User:
                     common.delCertSession(request)
                     return render(request, 'cert/userNotFound.html', {})
                 
-                request.session['CERT_STATUS'] = common.CertStatus.RESET_PASSWORD
+                request.session['CERT_STATUS'] = common.CertStatus.CHANGE_PASSWORD
 
-                return redirect('cert:resetPassword')
+                return redirect('cert:changePassword')
 
     elif request.method == "GET":
         form = CertPhoneRecvNumberForm(request.GET)
@@ -118,12 +120,19 @@ def changePassword(request):
             # 유저패스워드 변경
             phone = request.session['CERT_DATA']['PHONE']
 
-            user = User.objects.filter(phone=phone)
-            if not user:
+            try:
+                userModel = get_user_model()
+                user = userModel.objects.get(phone=phone)
+            except ObjectDoesNotExist:
                 common.delCertSession(request)
                 return render(request, 'cert/userNotFound.html', {})
 
-            password_changed(password1, user)
+            password = form.cleaned_data['password1']
+
+            user.set_password(password)
+            user.save()
+            #password_changed(password, user)
+
             common.delCertSession(request)
 
             return render(request, 'cert/changePassword_done.html', {})

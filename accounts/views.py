@@ -90,8 +90,6 @@ def login(request):
             user_login(request, form.get_user())
             return redirect('index')
 
-        return redirect('accounts:login')
-
     else:
         form = AuthenticationForm()
 
