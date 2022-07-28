@@ -5,46 +5,58 @@
     <h1>Certificate phone number</h1>
     <form method="POST">
         {% csrf_token %}
+        {% if request.method == 'POST' %}
+            {% include 'formErrors.html' %}
+        {% endif %}
         <table style="width:300px;">
             <tr>
                 <td colspan="4">
                     <label for="name">Name</label>
                     <input type="text" class="form-control" name="name" id="name"
                            value="{{ form.name.value|default_if_none:'' }}">
-                    <div>{% field.errors.get('name') %}</div>
                 </td>
             </tr>
             <tr>
                 <td colspan="4">
-                    <label for="socialSecurityNumberFront">SocialSecurityNumber</label>
+                    <label for="socialSecurityNumberPre">SocialSecurityNumber</label>
                 </td>
             </tr>
             <tr>
                 <td style="width:100px">
-                    <div class="col-sm-13"><input placeholder="840502" type="text" class="form-control" name="socialSecurityNumberFront" id="socialSecurityNumberFront"
-                                                       value="{{ form.socialSecurityNumberFront.value|default_if_none:'' }}"></div>
+                    <div class="col-sm-13"><input placeholder="840502" type="text" size="6" class="form-control" name="socialSecurityNumberPre" id="socialSecurityNumberPre"
+                                                       value="{{ form.socialSecurityNumberPre.value|default_if_none:'' }}"></div>
                 </td>
                 <td style="width:20px">
                     -
                 </td>
                 <td style="width:40px">
-                    <div class="col-sm-13"><input placeholder="1" type="text" class="form-control" name="gender" id="gender"
+                    <div class="col-sm-13"><input placeholder="1" type="text" size="1" class="form-control" name="gender" id="gender"
                                                  value="{{ form.gender.value|default_if_none:'' }}"></div>
                 </td>
                 <td style="width:140px">
                     ••••••
                 </td>
             </tr>
-            <tr><td colspan="4">{% field.errors.get('socialSecurityNumberFront') %}{% field.error.get('gender') %}</td></tr>
+            <tr><td colspan="4"></td></tr>
             <tr>
                 <td colspan="4">
                     <label for="phone">Phone number</label>
-                    <input type="text" class="form-control" name="phone" id="phone"
+                    <input type="text" size="11" class="form-control" name="phone" id="phone"
                                value="{{ form.phone.value|default_if_none:'' }}">
-                    <div>{% field.errors.get('phone') %}</div>
                 </td>
             </tr>
             <tr><td colspan="4">
+                <label for="telecom">Telecom</label>
+            </td></tr>
+            <tr><td colspan="4">
+                <select name="telecom">
+                    <option value="">SKT</option>
+                    <option value="">KT</option>
+                    <option value="">LG U+</option>
+                    <option value="">SKT 알뜰폰</option>
+                    <option value="">KT 알뜰폰</option>
+                    <option value="">LG U+ 알뜰폰</option>
+                </select>
             </td></tr>
         </table>
         <input type="submit" class="btn btn-primary" name="submit" value="submit"/>

@@ -1,40 +1,94 @@
-from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CreateUserForm
 from django.contrib.auth import login as user_login
 from django.contrib.auth import logout as user_logout
 from django.contrib.auth.forms import AuthenticationForm
-from django.urls import reverse_lazy
+from ably import common
 import pdb
 
 
-# 회원가입
-def signup2(request):
+# 전화번호 인증 - 인증정보 입력
+def certPhone(request):
+    if not request.session.get('CERT_TYPE') or not request.session.get('CERT_STATUS'):
+        common.delCertSession(request)
+
+        return HttpResponse('<h2>It\'s invalid accessed path.</h2>', status=204)
+    elif request.session['CERT_STATUS'] != common.CertStatus.CERT_PHONE_INPUT:
+        common.delCertSession(request)
+
+        return HttpResponse('<h2>It\'s invalid accessed path.</h2>', status=204)
+
     if request.method == "POST":
-        pdb.set_trace()
+        form = CertPhoneInputForm(request.POST)
+
+        if form.is_valid():
+            request.session['CERT_STATUS'] = common.CertStatus.CERT_PHONE_RECV_NUMBER
+
+            request.session.set('CERT_DATA', {
+                'NAME': form.cleaned_data['name'],
+                'PHONE': form.cleaned_data['phone']
+            })
+
+            return redirect('cert:certPhoneRecvNumber')
+
+    elif request.method == "GET":
+        form = CertPhoneInputForm(request.GET)
+
+    else:
+        common.delCertSession(request)
+        return HttpResponse('<h2>It\'s invalid accessed path.</h2>', status=204)
+
+    return render(request, 'cert/certPhone.html', {'form': form})
+
+# 회원가입
+def register(request):
+    if not request.session.get('CERT_TYPE') or not request.session.get('CERT_STATUS'):
+        common.delCertSession(request)
+
+        return HttpResponse('<h2>It\'s invalid accessed path.</h2>', status=204)
+    elif request.session['CERT_STATUS'] != common.CertStatus.SIGNUP:
+        common.delCertSession(request)
+
+        return HttpResponse('<h2>It\'s invalid accessed path.</h2>', status=204)
+
+    if request.method == "POST":
         form = CreateUserForm(request.POST)
         if form.is_valid():
             form.save()
 
-            return redirect('accounts:login')
+            return render(request, 'accounts/register_done.html', {})
 
     elif request.method == "GET":
+        pdb.set_trace()
         form = CreateUserForm()
+        form.fields['name'].initial = request.session.get('CERT_DATA').get('NAME')
+        form.fields['phone'].initial = request.session.get('CERT_DATA').get('PHONE')
 
-    return render(request, 'accounts/signup.html', {'form': form})
+    return render(request, 'accounts/register.html', {'form': form})
+
 
 # 회원가입
 def signup(request):
+    request.session['CERT_TYPE']    = common.CertType.SIGNUP
+    request.session['CERT_STATUS']  = common.CertStatus.CERT_PHONE_INPUT
+
     return redirect('cert:certPhone') # 전번인증로 넘겨준다.
 
-def login(request):
 
+def forgotPassword(request):
+    request.session['CERT_TYPE']    = common.CertType.FORGOT_PASSWORD
+    request.session['CERT_STATUS']  = common.CertStatus.CERT_PHONE_INPUT
+
+    return redirect('cert:certPhone') # 전번인증로 넘겨준다.
+
+
+def login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, request.POST)
         # 회원가입과 다르게 맨 앞의 인자로 request가 들어간다.
         if form.is_valid():
             user_login(request, form.get_user())
-            return redirect('/')
+            return redirect('index')
 
         return redirect('accounts:login')
 
@@ -46,4 +100,5 @@ def login(request):
 
 def logout(request):
     user_logout(request)
-    return redirect('home:index')
+    return redirect('index')
+

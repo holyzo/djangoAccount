@@ -5,13 +5,16 @@
     <h1>Certificate phone number</h1>
     <form method="POST">
         {% csrf_token %}
+        {% if request.method == 'POST' %}
+            {% include 'formErrors.html' %}
+        {% endif %}
         <table style="width:500px;align:center;">
             <tr>
                 <td>
                     <div class="mb-3">
-                        <label for="certNum">Phone number</label>
-                        <input type="text" class="form-control" name="certNum" id="certNum"
-                               value="{{ form.certNum.value|default_if_none:'' }}">
+                        <label for="number">Cetification number</label>
+                        <input type="text" class="form-control" name="number" id="number"
+                               value="{{ form.number.value|default_if_none:'' }}">
                     </div>
                 </td>
             </tr>

@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block body %}
+<p>There is not Your account this site!</p>
+<p>After 7 seconds you will be
+    redirected to the main page</p>
+<meta http-equiv="refresh" content="7;url={% url 'index' %}">
+{% endblock %}
