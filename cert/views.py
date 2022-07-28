@@ -11,7 +11,9 @@ def certPhone(request):
     if request.method == "POST":
         form = CertPhoneInputForm(request.POST)
 
+        pdb.set_trace()
         if form.is_valid():
+
             nextForm = CertPhoneRecvNumberForm(certType=form.certType,
                                                phone=form.phone.value,
                                                name=form.name.value)
@@ -21,11 +23,9 @@ def certPhone(request):
     elif request.method == "GET":
         form = CertPhoneInputForm(request.GET)
 
-        certType = request.data.get('certType', default=0)
+        form.certType = request.GET.get('certType', default=0)
 
-        # TODO 비로그인 세션 사용이 가능한지 확인해야함.
-        # TODO 확인필요. request에 메소드를 따라 render가 전달되는지 확인이 필요하다.
-    return render(request, 'cert/certPhone.html', {'certType': form}) # request에 상관없이 certPhone.html에 certType을 심어서 사용
+    return render(request, 'cert/certPhone.html', {'form': form})
 
 
 # 전화번호 인증 - 인증번호 받기

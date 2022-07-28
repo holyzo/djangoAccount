@@ -7,9 +7,9 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.urls import reverse_lazy
 import pdb
 
-'''
+
 # 회원가입
-def signup(request):
+def signup2(request):
     if request.method == "POST":
         pdb.set_trace()
         form = CreateUserForm(request.POST)
@@ -21,8 +21,8 @@ def signup(request):
     elif request.method == "GET":
         form = CreateUserForm()
 
-    return render(request, 'cert/certPhone.html', {'form': form})
-'''
+    return render(request, 'accounts/signup.html', {'form': form})
+
 # 회원가입
 def signup(request):
     return redirect('cert:certPhone') # 전번인증로 넘겨준다.
