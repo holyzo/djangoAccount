@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block body %}
+{% include 'nav.html' %}
+<div class="wrapper" style="text-align: left;">
+    <h1>My infomation</h1>
+        <table style="width:300px;">
+            <tr>
+                <td>
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" name="username" id="username"
+                           value="{{ form.username.value|default_if_none:'' }}" readonly>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" name="name" id="name"
+                           value="{{ form.name.value|default_if_none:'' }}" readonly>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="name">Phone number</label>
+                    <input type="text" class="form-control" name="name" id="name"
+                           value="{{ form.name.value|default_if_none:'' }}" readonly>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="name">E-mail</label>
+                    <input type="text" class="form-control" name="email" id="email"
+                           value="{{ form.email.value|default_if_none:'' }}" readonly>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="name">Nickname</label>
+                    <input type="text" class="form-control" name="nickname" id="nickname"
+                           value="{{ form.nickname.value|default_if_none:'' }}" readonly>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" class="btn btn-primary" onclick="location.href='{% url 'index' %}'" value="Go to main"/>
+                </td>
+            </tr>
+
+
+        </table>
+
+
+</div>
+{% endblock %}

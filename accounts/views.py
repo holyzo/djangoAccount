@@ -1,13 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import CreateUserForm
+from .forms import CreateUserForm, ViewUserForm
 from django.contrib.auth import login as user_login
 from django.contrib.auth import logout as user_logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods
 from ably import common
 import pdb
 
 
 # 전화번호 인증 - 인증정보 입력
+@require_http_methods(['GET','POST'])
 def certPhone(request):
     if not request.session.get('CERT_TYPE') or not request.session.get('CERT_STATUS'):
         common.delCertSession(request)
@@ -40,7 +43,9 @@ def certPhone(request):
 
     return render(request, 'cert/certPhone.html', {'form': form})
 
+
 # 회원가입
+@require_http_methods(['GET','POST'])
 def register(request):
     if not request.session.get('CERT_TYPE') or not request.session.get('CERT_STATUS'):
         common.delCertSession(request)
@@ -59,7 +64,6 @@ def register(request):
             return render(request, 'accounts/register_done.html', {})
 
     elif request.method == "GET":
-        pdb.set_trace()
         form = CreateUserForm()
         form.fields['name'].initial = request.session.get('CERT_DATA').get('NAME')
         form.fields['phone'].initial = request.session.get('CERT_DATA').get('PHONE')
@@ -68,6 +72,7 @@ def register(request):
 
 
 # 회원가입
+@require_http_methods(['GET'])
 def signup(request):
     request.session['CERT_TYPE']    = common.CertType.SIGNUP
     request.session['CERT_STATUS']  = common.CertStatus.CERT_PHONE_INPUT
@@ -75,6 +80,7 @@ def signup(request):
     return redirect('cert:certPhone') # 전번인증로 넘겨준다.
 
 
+@require_http_methods(['GET'])
 def forgotPassword(request):
     request.session['CERT_TYPE']    = common.CertType.FORGOT_PASSWORD
     request.session['CERT_STATUS']  = common.CertStatus.CERT_PHONE_INPUT
@@ -82,6 +88,7 @@ def forgotPassword(request):
     return redirect('cert:certPhone') # 전번인증로 넘겨준다.
 
 
+@require_http_methods(['GET','POST'])
 def login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, request.POST)
@@ -96,7 +103,17 @@ def login(request):
     return render(request, 'accounts/login.html', {'form': form})
 
 
+@login_required
+@require_http_methods(['GET'])
 def logout(request):
     user_logout(request)
     return redirect('index')
 
+
+@login_required
+@require_http_methods(['GET'])
+def myInfo(request):
+    if request.method == 'GET':
+        form = ViewUserForm(instance=request.user)
+
+    return render(request, 'accounts/myInfo.html', {'form': form})

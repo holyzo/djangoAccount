@@ -8,10 +8,13 @@ from django.template import Template
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import HttpResponse
 from django.contrib.auth.password_validation import password_changed
+from django.views.decorators.http import require_http_methods
 from ably import common
 import pdb
 
+
 # 전화번호 인증 - 인증정보 입력
+@require_http_methods(['GET','POST'])
 def certPhone(request):
     if not request.session.get('CERT_TYPE') or not request.session.get('CERT_STATUS'):
         common.delCertSession(request)
@@ -47,6 +50,7 @@ def certPhone(request):
 
 
 # 전화번호 인증 - 인증번호 받기
+@require_http_methods(['GET','POST'])
 def certPhoneRecvNumber(request):
     if not request.session.get('CERT_TYPE') or not request.session.get('CERT_STATUS'):
         common.delCertSession(request)
@@ -64,14 +68,13 @@ def certPhoneRecvNumber(request):
             if request.session['CERT_TYPE'] == common.CertType.SIGNUP:
                 request.session['CERT_STATUS'] = common.CertStatus.SIGNUP
 
-                pdb.set_trace()
                 # 회원가입시 유저가 있는지 체크
-
                 phone = request.session['CERT_DATA']['PHONE']
 
                 userModel = get_user_model()
-                user = userModel.objects.filter(phone=phone)
-                if user:
+                rstUser = userModel.objects.filter(phone=phone)
+                if rstUser:
+                    user = rstUser[0]
                     common.delCertSession(request)
                     return render(request, 'cert/userFound.html', {'username': user.username})
 
@@ -82,8 +85,8 @@ def certPhoneRecvNumber(request):
 
                 # 비밀번호 재설정시 유저가 있는지 체크
                 userModel = get_user_model()
-                user = userModel.objects.filter(phone=phone)
-                if not User:
+                rstUser = userModel.objects.filter(phone=phone)
+                if not rstUser:
                     common.delCertSession(request)
                     return render(request, 'cert/userNotFound.html', {})
                 
@@ -102,6 +105,7 @@ def certPhoneRecvNumber(request):
 
 
 # 비밀번호 재설정
+@require_http_methods(['GET','POST'])
 def changePassword(request):
     if not request.session.get('CERT_TYPE') or not request.session.get('CERT_STATUS'):
         common.delCertSession(request)
@@ -120,18 +124,18 @@ def changePassword(request):
             # 유저패스워드 변경
             phone = request.session['CERT_DATA']['PHONE']
 
-            try:
-                userModel = get_user_model()
-                user = userModel.objects.get(phone=phone)
-            except ObjectDoesNotExist:
+            userModel = get_user_model()
+            rstUser = userModel.objects.filter(phone=phone)
+
+            if not rstUser:
                 common.delCertSession(request)
                 return render(request, 'cert/userNotFound.html', {})
 
+            user = rstUser[0]
             password = form.cleaned_data['password1']
 
             user.set_password(password)
             user.save()
-            #password_changed(password, user)
 
             common.delCertSession(request)
 

@@ -5,15 +5,28 @@
 
 <form method="POST">
     {% csrf_token %}
+    {% if request.method == 'POST' %}
+        {% include 'formErrors.html' %}
+    {% endif %}
     <table style="width:500px;">
         <tr>
-            <td colspan="2">
-                {% bootstrap_form form %}
+            <td colspan="3">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" name="username" id="username"
+                       value="{{ form.username.value|default_if_none:'' }}">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" id="password"
+                       value="{{ form.password.value|default_if_none:'' }}">
             </td>
         </tr>
         <tr>
             <td><input type="submit" class="btn btn-primary" value="login"/></td>
-            <td style="width:430px"><input type="button" class="btn btn-primary" onclick="location.href='{% url 'accounts:forgotPassword' %}'" value="forgot password"/></td>
+            <td style="width:60px"><input type="button" class="btn btn-primary" onclick="location.href='{% url 'accounts:forgotPassword' %}'" value="forgot password"/></td>
+            <td style="width:360px"><input type="button" class="btn btn-primary" onclick="location.href='{% url 'index' %}'" value="Go to main"/></td>
         </tr>
     </table>
 </form>

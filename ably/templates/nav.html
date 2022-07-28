@@ -4,6 +4,9 @@
         <td>
             <a class="nav-link" href="{% url 'accounts:logout' %}">{{ user.username }} (logout)</a>
         </td>
+        <td>
+            <a class="nav-link" href="{% url 'accounts:myInfo' %}">my information</a>
+        </td>
     </tr>
 </table>
 {% else %}
