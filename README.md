@@ -3,8 +3,10 @@
 2. > djangoAccount\venv\scripts\activate.bat
 3. > cd djangoAccount
 4. > pip install -r requirements.txt
-5. > python manage.py runserver
-6. 브라우져에 "http://127.0.0.1:8000/index" 페이지로 이동한다.
+5. > python manage.py makemigrations
+6. > python manage.py migrate
+7. > python manage.py runserver
+8. 브라우져에 "http://127.0.0.1:8000/index" 페이지로 이동한다.
 
 # 구현스펙
 - python 3.9
